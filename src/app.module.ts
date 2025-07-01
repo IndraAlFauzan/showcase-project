@@ -1,0 +1,38 @@
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import jwtConfig from './config/jwt.config';
+import { envValidationSchema } from './config/env.validation';
+import { RoleEntity } from './modules/user/domain/entities/role.entity';
+import { UserEntity } from './modules/user/domain/entities/user.entity';
+import { AuthModule } from './modules/auth/auth.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [jwtConfig],
+      validationSchema: envValidationSchema,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        type: 'mysql',
+        host: config.get('DATABASE_HOST'),
+        port: +config.get('DATABASE_PORT'),
+        username: config.get('DATABASE_USER'),
+        database: config.get('DATABASE_NAME'),
+        autoLoadEntities: true,
+        entities: [RoleEntity, UserEntity],
+        synchronize: false,
+      }),
+      inject: [ConfigService],
+    }),
+    AuthModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}

@@ -15,10 +15,10 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {
-    const result = await this.loginUseCase.execute(dto.email, dto.password);
+    const result = await this.loginUseCase.execute(dto);
     return {
-      message: result.message,
-      data: result.data,
+      message: 'Login berhasil',
+      data: result,
     };
   }
 
@@ -32,7 +32,7 @@ export class AuthController {
       dto.roleId,
     );
     return {
-      message: result.message,
+      message: 'Registrasi berhasil',
       data: result,
     };
   }

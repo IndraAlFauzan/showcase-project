@@ -8,6 +8,8 @@ import { envValidationSchema } from './config/env.validation';
 import { RoleEntity } from './modules/user/domain/entities/role.entity';
 import { UserEntity } from './modules/user/domain/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { AuthModule } from './modules/auth/auth.module';
       inject: [ConfigService],
     }),
     AuthModule,
+    UserModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
-import { RoleEntity } from 'src/modules/user/domain/entities/role.entity';
+import { LoginDto } from '../../presentation/dto/login.dto';
 
 @Injectable()
 export class LoginUseCase {
@@ -15,13 +15,13 @@ export class LoginUseCase {
     private readonly userRepo: Repository<UserEntity>,
   ) {}
 
-  async execute(email: string, password: string) {
+  async execute(loginDTO: LoginDto) {
     const user = await this.userRepo.findOne({
-      where: { email },
+      where: { email: loginDTO.email },
       relations: ['role'],
     });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await bcrypt.compare(loginDTO.password, user.password))) {
       throw new UnauthorizedException('Email atau password salah');
     }
 
@@ -34,15 +34,11 @@ export class LoginUseCase {
     const access_token = await this.jwtService.signAsync(payload);
 
     return {
-      status_code: 200,
-      message: 'Login berhasil',
-      data: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role.name,
-        access_token,
-      },
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role.name,
+      access_token,
     };
   }
 }

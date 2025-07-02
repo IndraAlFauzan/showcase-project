@@ -37,6 +37,11 @@ export class RegisterUseCase {
 
     await this.userRepo.save(user);
 
-    return { message: 'Registrasi berhasil' };
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: role.name,
+    };
   }
 }

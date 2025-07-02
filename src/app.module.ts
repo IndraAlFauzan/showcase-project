@@ -10,6 +10,7 @@ import { UserEntity } from './modules/user/domain/entities/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { CategoryModule } from './modules/category/category.module';
+import { ExpertiseModule } from './modules/expertise/expertise.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CategoryModule } from './modules/category/category.module';
     AuthModule,
     UserModule,
     CategoryModule,
+    ExpertiseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

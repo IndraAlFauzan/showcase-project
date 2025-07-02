@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('project_categories')
+@Entity('categories')
 @Unique(['name'])
 export class CategoryEntity {
   @PrimaryGeneratedColumn()

@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
-import { CreateCategoryUseCase } from '../../application/use-cases/create-catetory.usecase';
-import { GetAllCategoryUseCase } from '../../application/use-cases/get-all-catetory.usecase';
-import { UpdateCategoryUseCase } from '../../application/use-cases/update-catetory.usecase';
-import { DeleteCategoryUseCase } from '../../application/use-cases/delete-catetory.usecase';
+import { CreateCategoryUseCase } from '../../application/use-cases/create-category.usecase';
+import { GetAllCategoryUseCase } from '../../application/use-cases/get-all-category.usecase';
+import { UpdateCategoryUseCase } from '../../application/use-cases/update-category.usecase';
+import { DeleteCategoryUseCase } from '../../application/use-cases/delete-category.usecase';
 import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
 import { RoleGuard } from 'src/shared/guards/role.guard';
 import { Roles } from 'src/shared/decorators/roles.decorator';

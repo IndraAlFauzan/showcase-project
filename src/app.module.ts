@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ExpertiseModule } from './modules/expertise/expertise.module';
+import { TechnologyModule } from './modules/technology/technology.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ExpertiseModule } from './modules/expertise/expertise.module';
     UserModule,
     CategoryModule,
     ExpertiseModule,
+    TechnologyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -14,8 +14,16 @@ import { ExpertiseModule } from './modules/expertise/expertise.module';
 import { TechnologyModule } from './modules/technology/technology.module';
 import { InterestModule } from './modules/interest/interest.module';
 
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { StudentModule } from './modules/student/student.module';
+
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [jwtConfig],
@@ -41,6 +49,7 @@ import { InterestModule } from './modules/interest/interest.module';
     ExpertiseModule,
     TechnologyModule,
     InterestModule,
+    StudentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

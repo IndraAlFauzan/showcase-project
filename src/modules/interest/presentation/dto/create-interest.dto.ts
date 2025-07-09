@@ -14,6 +14,5 @@ export class CreateInterestDto {
   @TrimmedString({
     message: ' Interest tidak boleh kosong atau hanya spasi',
   })
-  @NoSpecialChars()
   name: string;
 }

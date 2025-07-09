@@ -9,8 +9,14 @@ async function bootstrap() {
   // Interceptor response standar
   app.useGlobalInterceptors(new ResponseInterceptor());
 
+  app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.url}`);
+    next();
+  });
+
   // Global exception filter
   app.useGlobalFilters(new GlobalHttpExceptionFilter());
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // hapus properti yang tidak didefinisikan di DTO

@@ -45,7 +45,7 @@ export class StudentController {
   ) {}
 
   @Post()
-  @Roles('mahasiswa')
+  @Roles('mahasiswa', 'admin')
   @UseInterceptors(
     FileInterceptor('photo', {
       storage: diskStorage({
@@ -66,7 +66,7 @@ export class StudentController {
   ) {
     const photo_url = photo
       ? `/uploads/student-photos/${photo.filename}`
-      : undefined;
+      : dto.photo_url;
 
     const payload = { ...dto, photo_url };
     const result = await this.createStudent.execute(payload, user.sub);
@@ -90,19 +90,29 @@ export class StudentController {
     };
   }
 
+  @Get('me')
+  @Roles('mahasiswa')
+  async getMyProfile(@CurrentUser() user: JwtPayload) {
+    const result = await this.getStudent.byUserId(user.sub);
+    return {
+      status_code: HttpStatus.OK,
+      message: 'Your student profile retrieved',
+      data: result,
+    };
+  }
+
   @Get(':id')
-  @Roles('admin', 'dosen', 'mahasiswa')
+  @Roles('admin', 'dosen')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const result = await this.getStudent.execute(id);
+    const result = await this.getStudent.byId(id);
     return {
       status_code: HttpStatus.OK,
       message: 'Student profile retrieved',
       data: result,
     };
   }
-
-  @Put(':id')
-  @Roles('mahasiswa', 'admin')
+  @Put('me')
+  @Roles('mahasiswa')
   @UseInterceptors(
     FileInterceptor('photo', {
       storage: diskStorage({
@@ -116,7 +126,42 @@ export class StudentController {
       }),
     }),
   )
-  async update(
+  async updateByUserId(
+    @CurrentUser() user: JwtPayload,
+    @UploadedFile() photo: Express.Multer.File,
+    @Body() dto: UpdateStudentProfileDto,
+  ) {
+    const photo_url = photo
+      ? `/uploads/student-photos/${photo.filename}`
+      : dto.photo_url;
+    const result = await this.updateStudent.byUserId(user.sub, {
+      ...dto,
+      photo_url,
+    });
+
+    return {
+      status_code: HttpStatus.OK,
+      message: 'Student profile updated successfully',
+      data: result,
+    };
+  }
+
+  @Put(':id')
+  @Roles('dosen', 'admin')
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      storage: diskStorage({
+        destination: './uploads/student-photos',
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          cb(null, `photo-${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
+  )
+  async updateByProfileId(
     @Param('id', ParseIntPipe) id: number,
     @UploadedFile() photo: Express.Multer.File,
     @Body() dto: UpdateStudentProfileDto,
@@ -124,7 +169,10 @@ export class StudentController {
     const photo_url = photo
       ? `/uploads/student-photos/${photo.filename}`
       : dto.photo_url;
-    const result = await this.updateStudent.execute(id, { ...dto, photo_url });
+    const result = await this.updateStudent.byProfileId(id, {
+      ...dto,
+      photo_url,
+    });
 
     return {
       status_code: HttpStatus.OK,

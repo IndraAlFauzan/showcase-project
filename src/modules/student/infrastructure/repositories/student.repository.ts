@@ -1,5 +1,5 @@
 // modules/student/infrastructure/repositories/student.repository.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -29,6 +29,13 @@ export class StudentRepository implements IStudentRepository {
     return await this.repo.find();
   }
 
+  async findByUserId(userId: number): Promise<StudentEntity | null> {
+    return this.repo.findOne({
+      where: { user: { id: userId } },
+      relations: ['user', 'interests', 'technologies'],
+    });
+  }
+
   async update(
     id: number,
     data: Partial<StudentEntity>,
@@ -39,7 +46,7 @@ export class StudentRepository implements IStudentRepository {
     });
 
     if (!student) {
-      throw new Error('Student not found');
+      throw new NotFoundException('Profil mahasiswa tidak ditemukan');
     }
 
     // Field biasa

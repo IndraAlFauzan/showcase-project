@@ -30,12 +30,9 @@ export class CreateStudentProfileUseCase {
     user_id: number,
   ): Promise<StudentProfileResponseDto> {
     try {
-      // ✅ Cek apakah sudah ada profil berdasarkan user_id
-      const existingByUser = await this.studentRepo.findById(user_id);
+      const existingByUser = await this.studentRepo.findByUserId(user_id);
       if (existingByUser) {
-        throw new ConflictException(
-          'Profil mahasiswa untuk user ini sudah ada',
-        );
+        throw new ConflictException('Profil mahasiswa sudah ada');
       }
 
       const user = new UserEntity();
@@ -81,7 +78,9 @@ export class CreateStudentProfileUseCase {
       nama: student.nama,
       nim: student.nim,
       angkatan: student.angkatan,
-      photo_url: student.photo_url,
+      photo_url: student.photo_url
+        ? `${process.env.PUBLIC_STORAGE_URL}${student.photo_url}`
+        : null,
       interests: student.interests?.map((i) => i.name) || [],
       technologies: student.technologies?.map((t) => t.name) || [],
     };

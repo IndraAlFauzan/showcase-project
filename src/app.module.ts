@@ -12,6 +12,7 @@ import { UserModule } from './modules/user/user.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ExpertiseModule } from './modules/expertise/expertise.module';
 import { TechnologyModule } from './modules/technology/technology.module';
+import { InterestModule } from './modules/interest/interest.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TechnologyModule } from './modules/technology/technology.module';
     CategoryModule,
     ExpertiseModule,
     TechnologyModule,
+    InterestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

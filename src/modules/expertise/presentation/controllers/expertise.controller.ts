@@ -18,6 +18,7 @@ import { DeleteExpertiseUseCase } from '../../application/use-cases/delete-exper
 import { Roles } from 'src/shared/decorators/roles.decorator';
 import { UpdateCategoryDto } from 'src/modules/category/presentation/dto/update-category.dto';
 import { CreateExpertiseDto } from '../dto/create-expertrise.dto';
+import { UpdateExpertiseDto } from '../dto/update-expertrise.dto';
 
 @Controller('expertise')
 @UseGuards(JwtAuthGuard, RoleGuard)
@@ -55,7 +56,7 @@ export class ExpertiseController {
   @Roles('admin', 'dosen')
   async updateExpertise(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateCategoryDto,
+    @Body() dto: UpdateExpertiseDto,
   ) {
     const result = await this.updateUseCase.execute(id, dto);
     return {

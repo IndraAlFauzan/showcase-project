@@ -32,6 +32,7 @@ import { extname } from 'path';
 import { Express } from 'express';
 import { log } from 'console';
 import { use } from 'passport';
+import { multerStudentPhotoStorage } from 'src/shared/helper/multer.helper';
 
 @Controller('students')
 @UseGuards(JwtAuthGuard, RoleGuard)
@@ -115,15 +116,7 @@ export class StudentController {
   @Roles('mahasiswa')
   @UseInterceptors(
     FileInterceptor('photo', {
-      storage: diskStorage({
-        destination: './uploads/student-photos',
-        filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          cb(null, `photo-${uniqueSuffix}${ext}`);
-        },
-      }),
+      storage: multerStudentPhotoStorage,
     }),
   )
   async updateByUserId(
@@ -150,15 +143,7 @@ export class StudentController {
   @Roles('dosen', 'admin')
   @UseInterceptors(
     FileInterceptor('photo', {
-      storage: diskStorage({
-        destination: './uploads/student-photos',
-        filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          cb(null, `photo-${uniqueSuffix}${ext}`);
-        },
-      }),
+      storage: multerStudentPhotoStorage,
     }),
   )
   async updateByProfileId(

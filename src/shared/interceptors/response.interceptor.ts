@@ -13,27 +13,33 @@ export class ResponseInterceptor implements NestInterceptor {
     const res = context.switchToHttp().getResponse();
 
     return next.handle().pipe(
-      map((response) => {
+      map((resBody) => {
+        // If already in the desired format
         if (
-          typeof response === 'object' &&
-          response !== null &&
-          'status_code' in response &&
-          'message' in response &&
-          'data' in response
+          typeof resBody === 'object' &&
+          resBody !== null &&
+          'status_code' in resBody &&
+          'message' in resBody &&
+          'data' in resBody
         ) {
-          return response;
+          return resBody;
         }
 
+        const status = res.statusCode;
+        const message =
+          typeof resBody === 'object' && resBody?.message
+            ? resBody.message
+            : 'Success';
+
+        const data =
+          typeof resBody === 'object' && 'data' in resBody
+            ? resBody.data
+            : resBody;
+
         return {
-          status_code: res.statusCode,
-          message:
-            typeof response === 'object' && response?.message
-              ? response.message
-              : 'Success',
-          data:
-            typeof response === 'object' && 'data' in response
-              ? response.data
-              : response,
+          status_code: status,
+          message,
+          data,
         };
       }),
     );

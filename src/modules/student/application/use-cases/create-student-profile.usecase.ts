@@ -76,6 +76,7 @@ export class CreateStudentProfileUseCase {
     return {
       id: student.id,
       nama: student.nama,
+      user_id: student.user.id,
       nim: student.nim,
       angkatan: student.angkatan,
       photo_url: student.photo_url

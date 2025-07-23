@@ -19,32 +19,34 @@ export class ProjectRepository implements IProjectRepository {
       description: data.description,
       type: data.type,
       semester: data.semester,
-      createdBy: { id: data.createdBy?.id },
 
-      // Relasi langsung (bisa by ID)
-      categories: data.categories?.map((c) => ({ id: c.id })),
-      technologies: data.technologies?.map((t) => ({ id: t.id })),
+      createdBy: { id: data.createdBy?.id } as any, // ✅ cast ke UserEntity
 
-      // Relasi entitas dengan cascade
+      categories: data.categories?.map((c) => ({ id: c.id })) as any,
+      technologies: data.technologies?.map((t) => ({ id: t.id })) as any,
+
       analysis: data.analysis,
       media: data.media,
       members: data.members?.map((m) => ({
         user: { id: m.user.id },
         is_leader: m.is_leader,
-      })),
+      })) as any,
     });
 
     const saved = await this.repo.save(project);
 
-    // Fetch lengkap untuk response
     return await this.repo.findOneOrFail({
       where: { id: saved.id },
       relations: [
         'createdBy',
+        'createdBy.student_profile',
         'analysis',
         'media',
         'members',
         'members.user',
+        'members.user.student_profile',
+        'members.user.student_profile.interests',
+        'members.user.student_profile.technologies',
         'technologies',
         'categories',
       ],
@@ -56,10 +58,16 @@ export class ProjectRepository implements IProjectRepository {
       where: { id },
       relations: [
         'createdBy',
+        'createdBy.student_profile',
+        'createdBy.student_profile.interests', // ✅ Ambil lewat student_profile
+        'createdBy.student_profile.technologies', // ✅ Ambil lewat student_profile
         'analysis',
         'media',
         'members',
         'members.user',
+        'members.user.student_profile',
+        'members.user.student_profile.interests',
+        'members.user.student_profile.technologies',
         'categories',
         'technologies',
       ],
@@ -171,6 +179,25 @@ export class ProjectRepository implements IProjectRepository {
         'technologies',
         'categories',
       ],
+    });
+  }
+
+  async findAllWithDetails(): Promise<ProjectEntity[]> {
+    return await this.repo.find({
+      relations: [
+        'createdBy',
+        'createdBy.student_profile',
+        'analysis',
+        'media',
+        'members',
+        'members.user',
+        'members.user.student_profile',
+        'members.user.student_profile.interests',
+        'members.user.student_profile.technologies',
+        'technologies',
+        'categories',
+      ],
+      order: { created_at: 'DESC' },
     });
   }
 

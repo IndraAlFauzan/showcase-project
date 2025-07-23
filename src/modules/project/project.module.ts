@@ -1,6 +1,6 @@
 // src/modules/project/project.module.ts
 
-import { Module } from '@nestjs/common';
+import { Get, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ProjectEntity } from './domain/entities/project.entity';
@@ -15,6 +15,9 @@ import { GetMyProjectsUseCase } from './application/use-cases/get-my-project.use
 
 import { ProjectRepository } from './infrastructure/repositories/project.repository';
 import { IProjectRepository } from './infrastructure/repositories/project.repository.interface';
+import { StudentModule } from '../student/student.module';
+import { GetAllProjectsUseCase } from './application/use-cases/get-all-project.usecase';
+import { ProjectPublicController } from './presentation/controllers/project-public.controller';
 
 @Module({
   imports: [
@@ -24,8 +27,9 @@ import { IProjectRepository } from './infrastructure/repositories/project.reposi
       ProjectMediaEntity,
       ProjectMemberEntity,
     ]),
+    StudentModule, // Import StudentModule to access IStudentRepository
   ],
-  controllers: [ProjectController],
+  controllers: [ProjectController, ProjectPublicController],
   providers: [
     {
       provide: 'IProjectRepository',
@@ -33,6 +37,7 @@ import { IProjectRepository } from './infrastructure/repositories/project.reposi
     },
     CreateProjectUseCase,
     GetMyProjectsUseCase,
+    GetAllProjectsUseCase, // Assuming you have this use case
   ],
 })
 export class ProjectModule {}

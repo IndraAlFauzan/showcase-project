@@ -59,6 +59,7 @@ export class UpdateStudentProfileUseCase {
     const baseUrl = this.configService.get<string>('PUBLIC_STORAGE_URL') || '';
     return {
       id: updated.id,
+      user_id: updated.user.id,
       nama: updated.nama,
       nim: updated.nim,
       angkatan: updated.angkatan,

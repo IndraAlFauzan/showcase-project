@@ -1,9 +1,17 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Res,
+} from '@nestjs/common';
 
 import { LoginDto } from '../dto/login.dto';
 import { LoginUseCase } from '../../application/use-cases/login.usecase';
 import { RegisterUseCase } from '../../application/use-cases/register.usecase';
 import { RegisterDto } from '../dto/register.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -14,8 +22,22 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginDto) {
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const result = await this.loginUseCase.execute(dto);
+
+    // Set cookie di sini
+    res.cookie('access_token', result.access_token, {
+      httpOnly: true,
+      secure: true, // wajib jika frontend pakai https
+      sameSite: 'lax', // agar cookie dikirim cross-domain
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24, // 1 hari (opsional)
+    });
+
+    // Kembalikan data tanpa access_token karena sudah di cookie
     return {
       message: 'Login berhasil',
       data: result,
@@ -29,11 +51,17 @@ export class AuthController {
       dto.name,
       dto.email,
       dto.password,
-      dto.roleId,
     );
     return {
       message: 'Registrasi berhasil',
       data: result,
     };
+  }
+
+  @Post('logout')
+  @HttpCode(200)
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token', { path: '/' });
+    return { message: 'Logout success' };
   }
 }

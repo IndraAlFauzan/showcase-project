@@ -17,6 +17,7 @@ export class GetAllStudentProfilesUseCase {
 
     return students.map((student) => ({
       id: student.id,
+      user_id: student.user.id,
       nama: student.nama,
       nim: student.nim,
       angkatan: student.angkatan,

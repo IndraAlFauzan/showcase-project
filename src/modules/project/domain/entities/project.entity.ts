@@ -19,6 +19,7 @@ import { ProjectMediaEntity } from './project-media.entity';
 import { ProjectMemberEntity } from './project-member.entity';
 import { TechnologyEntity } from 'src/modules/technology/domain/entities/technology.entity';
 import { CategoryEntity } from 'src/modules/category/domain/entities/category.entity';
+import { StudentEntity } from 'src/modules/student/domain/entities/student.entity';
 
 @Entity('projects')
 export class ProjectEntity {

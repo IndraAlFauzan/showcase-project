@@ -23,6 +23,7 @@ import {
   ProjectMediaType,
 } from '../dto/create-project.dto';
 import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
+import { GetAllProjectsUseCase } from '../../application/use-cases/get-all-project.usecase';
 
 @Controller('projects')
 @UseGuards(JwtAuthGuard, RoleGuard)
@@ -30,6 +31,7 @@ export class ProjectController {
   constructor(
     private readonly createProject: CreateProjectUseCase,
     private readonly getMyProjects: GetMyProjectsUseCase,
+    private readonly getAllProject: GetAllProjectsUseCase, // Assuming you have this repository
   ) {}
 
   @Post()

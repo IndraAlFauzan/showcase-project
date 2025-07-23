@@ -1,3 +1,5 @@
+import { StudentProfileResponseDto } from 'src/modules/student/presentation/dto/student-profile-response.dto';
+
 export class ProjectResponseDto {
   id: number;
   title: string;
@@ -5,10 +7,7 @@ export class ProjectResponseDto {
   type: 'web' | 'mobile';
   semester: string;
 
-  created_by: {
-    id: number;
-    email: string;
-  };
+  created_by: StudentProfileResponseDto;
 
   categories: string[]; // e.g., ["E-commerce", "Education"]
   technologies: string[]; // e.g., ["Flutter", "Laravel"]
@@ -26,12 +25,9 @@ export class ProjectResponseDto {
     url: string;
   }[];
 
-  members: {
-    id: number;
-    name: string;
-    email: string;
+  members: (StudentProfileResponseDto & {
     is_leader: boolean;
-  }[];
+  })[];
 
   created_at: string;
   updated_at: string;

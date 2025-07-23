@@ -10,7 +10,4 @@ export class RegisterDto {
   @IsString()
   @MinLength(6)
   password: string;
-
-  @IsInt()
-  roleId: number; // id dari role (1=admin, 2=dosen, 3=mahasiswa)
 }

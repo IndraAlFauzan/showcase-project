@@ -33,6 +33,7 @@ export class GetStudentProfileUseCase {
     const baseUrl = this.configService.get<string>('PUBLIC_STORAGE_URL') || '';
     return {
       id: student.id,
+      user_id: student.user.id,
       nama: student.nama,
       nim: student.nim,
       angkatan: student.angkatan,

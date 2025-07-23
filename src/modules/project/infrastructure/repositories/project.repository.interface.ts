@@ -7,4 +7,5 @@ export interface IProjectRepository {
   findByUserId(userId: number): Promise<ProjectEntity[]>;
   update(id: number, data: Partial<ProjectEntity>): Promise<ProjectEntity>;
   delete(id: number): Promise<void>;
+  findAllWithDetails(): Promise<ProjectEntity[]>;
 }

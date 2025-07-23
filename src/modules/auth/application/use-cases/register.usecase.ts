@@ -19,11 +19,11 @@ export class RegisterUseCase {
     private readonly roleRepo: Repository<RoleEntity>,
   ) {}
 
-  async execute(name: string, email: string, password: string, roleId: number) {
+  async execute(name: string, email: string, password: string) {
     const exists = await this.userRepo.findOne({ where: { email } });
     if (exists) throw new ConflictException('Email sudah terdaftar');
 
-    const role = await this.roleRepo.findOne({ where: { id: roleId } });
+    const role = await this.roleRepo.findOne({ where: { id: 3 } });
     if (!role) throw new NotFoundException('Role tidak ditemukan');
 
     const hashed = await bcrypt.hash(password, 10);

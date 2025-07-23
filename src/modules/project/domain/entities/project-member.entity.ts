@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ProjectEntity } from './project.entity';
 import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
+import { StudentEntity } from 'src/modules/student/domain/entities/student.entity';
 
 @Entity('project_members')
 export class ProjectMemberEntity {

@@ -80,8 +80,8 @@ export class StudentController {
     };
   }
 
-  @Get()
-  @Roles('admin', 'dosen')
+  @Get('all-mahasiswa')
+  @Roles('admin', 'dosen', 'mahasiswa')
   async findAll() {
     const result = await this.getAllStudents.execute();
     return {

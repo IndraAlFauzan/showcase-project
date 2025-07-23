@@ -17,6 +17,9 @@ export class StudentEntity {
   id: number;
 
   @Column()
+  user_id: number;
+
+  @Column()
   nama: string;
 
   @Column({ unique: true })
@@ -28,7 +31,7 @@ export class StudentEntity {
   @Column({ nullable: true })
   photo_url: string;
 
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 

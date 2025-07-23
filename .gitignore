@@ -3,3 +3,7 @@
 
 /dist
 /generated/prisma
+/uploads
+
+
+/Archive.zip

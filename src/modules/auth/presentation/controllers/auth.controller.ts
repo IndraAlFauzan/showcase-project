@@ -32,7 +32,7 @@ export class AuthController {
     res.cookie('access_token', result.access_token, {
       httpOnly: true,
       secure: true, // wajib jika frontend pakai https
-      sameSite: 'lax', // agar cookie dikirim cross-domain
+      sameSite: 'none', // agar cookie dikirim cross-domain
       path: '/',
       maxAge: 1000 * 60 * 60 * 24, // 1 hari (opsional)
     });

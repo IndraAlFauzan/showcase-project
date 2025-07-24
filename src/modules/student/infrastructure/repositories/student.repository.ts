@@ -26,7 +26,9 @@ export class StudentRepository implements IStudentRepository {
   }
 
   async findAll(): Promise<StudentEntity[]> {
-    return await this.repo.find();
+    return await this.repo.find({
+      relations: ['user', 'interests', 'technologies'],
+    });
   }
 
   async findByUserId(userId: number): Promise<StudentEntity | null> {

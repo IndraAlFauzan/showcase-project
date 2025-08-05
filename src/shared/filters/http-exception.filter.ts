@@ -39,6 +39,12 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
           : null,
     };
 
+    console.error('[EXCEPTION]', {
+      status,
+      message,
+      error: exception,
+    });
+
     res.status(status).json(errorResponse);
   }
 }

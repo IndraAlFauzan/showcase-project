@@ -18,6 +18,7 @@ import { IProjectRepository } from './infrastructure/repositories/project.reposi
 import { StudentModule } from '../student/student.module';
 import { GetAllProjectsUseCase } from './application/use-cases/get-all-project.usecase';
 import { ProjectPublicController } from './presentation/controllers/project-public.controller';
+import { UpdateProjectUseCase } from './application/use-cases/update-project.usecase';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ProjectPublicController } from './presentation/controllers/project-publ
     CreateProjectUseCase,
     GetMyProjectsUseCase,
     GetAllProjectsUseCase, // Assuming you have this use case
+    UpdateProjectUseCase,
   ],
 })
 export class ProjectModule {}

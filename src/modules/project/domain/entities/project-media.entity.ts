@@ -22,7 +22,9 @@ export class ProjectMediaEntity {
   @Column()
   url: string;
 
-  @ManyToOne(() => ProjectEntity, (project) => project.media)
+  @ManyToOne(() => ProjectEntity, (project) => project.media, {
+    nullable: false,
+  })
   @JoinColumn({ name: 'project_id' })
   project: ProjectEntity;
 

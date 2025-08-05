@@ -1,16 +1,20 @@
 // modules/project/infrastructure/repositories/project.repository.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { ProjectEntity } from '../../domain/entities/project.entity';
 import { IProjectRepository } from './project.repository.interface';
+import { ProjectMediaEntity } from '../../domain/entities/project-media.entity';
 
 @Injectable()
 export class ProjectRepository implements IProjectRepository {
   constructor(
     @InjectRepository(ProjectEntity)
     private readonly repo: Repository<ProjectEntity>,
+
+    @InjectRepository(ProjectMediaEntity)
+    private readonly projectMediaRepo: Repository<ProjectMediaEntity>,
   ) {}
 
   async create(data: Partial<ProjectEntity>): Promise<ProjectEntity> {
@@ -59,8 +63,8 @@ export class ProjectRepository implements IProjectRepository {
       relations: [
         'createdBy',
         'createdBy.student_profile',
-        'createdBy.student_profile.interests', // ✅ Ambil lewat student_profile
-        'createdBy.student_profile.technologies', // ✅ Ambil lewat student_profile
+        'createdBy.student_profile.interests',
+        'createdBy.student_profile.technologies',
         'analysis',
         'media',
         'members',
@@ -113,71 +117,53 @@ export class ProjectRepository implements IProjectRepository {
   ): Promise<ProjectEntity> {
     const existing = await this.repo.findOne({
       where: { id },
-      relations: [
-        'analysis',
-        'media',
-        'members',
-        'members.user',
-        'technologies',
-        'categories',
-      ],
+      relations: ['media', 'analysis', 'categories', 'technologies', 'members'],
     });
 
-    if (!existing) {
-      throw new Error('Project not found');
-    }
+    if (!existing) throw new NotFoundException('Project tidak ditemukan');
 
-    // Update field utama
+    // Update field biasa
     existing.title = data.title ?? existing.title;
     existing.description = data.description ?? existing.description;
     existing.type = data.type ?? existing.type;
     existing.semester = data.semester ?? existing.semester;
 
-    // Update analysis (OneToOne)
-    if (data.analysis) {
-      existing.analysis = {
-        ...existing.analysis,
-        ...data.analysis,
-      };
-    }
-
-    // Update media (replace semua)
     if (data.media) {
-      existing.media = data.media;
+      await this.projectMediaRepo.delete({ project: { id } });
+
+      const newMedia = data.media.map((m) =>
+        this.projectMediaRepo.create({
+          type: m.type,
+          title: m.title,
+          url: m.url,
+          project: { id } as any,
+        }),
+      );
+
+      await this.projectMediaRepo.save(newMedia);
+
+      // ✅ Tambahkan ini agar tidak error
+      existing.media = await this.projectMediaRepo.find({
+        where: { project: { id } },
+        order: { created_at: 'ASC' },
+      });
     }
 
-    // Update members (replace semua)
-    if (data.members) {
-      existing.members = data.members.map((m) => ({
-        user: { id: m.user.id },
-        is_leader: m.is_leader,
-      })) as any;
-    }
-
-    // Update ManyToMany
-    if (data.technologies) {
-      existing.technologies = data.technologies.map((t) => ({
-        id: t.id,
-      })) as any;
-    }
-
-    if (data.categories) {
-      existing.categories = data.categories.map((c) => ({ id: c.id })) as any;
-    }
-
+    // Simpan entity utama
     await this.repo.save(existing);
 
-    // Reload dengan semua relasi
+    // Kembalikan project lengkap
     return await this.repo.findOneOrFail({
       where: { id },
       relations: [
         'createdBy',
-        'analysis',
         'media',
-        'members',
-        'members.user',
+        'analysis',
         'technologies',
         'categories',
+        'members',
+        'members.user',
+        'members.user.student_profile',
       ],
     });
   }

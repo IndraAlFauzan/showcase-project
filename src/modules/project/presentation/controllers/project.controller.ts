@@ -32,6 +32,7 @@ import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
 import { GetAllProjectsUseCase } from '../../application/use-cases/get-all-project.usecase';
 import { UpdateProjectUseCase } from '../../application/use-cases/update-project.usecase';
 import { UpdateProjectDtoSimplified } from '../dto/update-project.dto';
+import { SetTopProjectUseCase } from '../../application/use-cases/set-top-project.usecase';
 
 @Controller('projects')
 @UseGuards(JwtAuthGuard, RoleGuard)
@@ -39,8 +40,9 @@ export class ProjectController {
   constructor(
     private readonly createProject: CreateProjectUseCase,
     private readonly getMyProjects: GetMyProjectsUseCase,
-    private readonly getAllProject: GetAllProjectsUseCase, // Assuming you have this repository
+    private readonly getAllProject: GetAllProjectsUseCase,
     private readonly updateProject: UpdateProjectUseCase,
+    private readonly setTopProjectUseCase: SetTopProjectUseCase,
   ) {}
 
   @Post()
@@ -142,6 +144,22 @@ export class ProjectController {
       status_code: HttpStatus.OK,
       message: 'Projects fetched successfully',
       data: result,
+    };
+  }
+
+  @Put(':id/top-project')
+  @Roles('admin') // atau siapa pun yang berhak
+  async setTopProject(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('is_top_project') isTop: boolean,
+  ) {
+    await this.setTopProjectUseCase.execute(id, isTop);
+
+    return {
+      status_code: HttpStatus.OK,
+      message: `Project berhasil ${
+        isTop ? 'ditandai' : 'dihapus dari'
+      } sebagai Top Project`,
     };
   }
 }

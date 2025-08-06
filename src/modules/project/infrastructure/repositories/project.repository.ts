@@ -57,6 +57,7 @@ export class ProjectRepository implements IProjectRepository {
     });
   }
 
+  // Find project by ID with all relations
   async findById(id: number): Promise<ProjectEntity | null> {
     return await this.repo.findOne({
       where: { id },
@@ -94,6 +95,10 @@ export class ProjectRepository implements IProjectRepository {
 
   async findByUserId(userId: number): Promise<ProjectEntity[]> {
     return await this.repo.find({
+      order: {
+        is_top_project: 'DESC',
+        created_at: 'DESC',
+      },
       where: {
         createdBy: {
           id: userId,
@@ -189,5 +194,9 @@ export class ProjectRepository implements IProjectRepository {
 
   async delete(id: number): Promise<void> {
     await this.repo.delete(id);
+  }
+
+  async setTopProject(id: number, value: boolean): Promise<void> {
+    await this.repo.update(id, { is_top_project: value });
   }
 }

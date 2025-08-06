@@ -8,4 +8,5 @@ export interface IProjectRepository {
   update(id: number, data: Partial<ProjectEntity>): Promise<ProjectEntity>;
   delete(id: number): Promise<void>;
   findAllWithDetails(): Promise<ProjectEntity[]>;
+  setTopProject(id: number, value: boolean): Promise<void>;
 }

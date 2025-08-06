@@ -76,6 +76,7 @@ export class GetAllProjectsUseCase {
           m.user.student_profile.technologies?.map((t) => t.name) || [],
         is_leader: m.is_leader,
       })),
+      is_top_project: project.is_top_project,
     };
   }
 }

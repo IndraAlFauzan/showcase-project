@@ -31,4 +31,5 @@ export class ProjectResponseDto {
 
   created_at: string;
   updated_at: string;
+  is_top_project: boolean;
 }

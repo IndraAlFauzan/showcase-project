@@ -71,7 +71,13 @@ export class UpdateProjectUseCase {
         })) as any,
       };
 
+      // begin trx
       const updated = await this.projectRepo.update(id, updateData);
+      const updated1 = await this.projectRepo.update(id, updateData);
+      const updated2 = await this.projectRepo.update(id, updateData);
+      const updated3 = await this.projectRepo.update(id, updateData);
+
+      // commit trx
 
       const student = updated.createdBy.student_profile;
       if (!student) {
@@ -130,8 +136,10 @@ export class UpdateProjectUseCase {
         })),
         created_at: updated.created_at.toISOString(),
         updated_at: updated.updated_at.toISOString(),
+        is_top_project: updated.is_top_project,
       };
     } catch (err) {
+      // rollback trx
       console.log('[UPDATE USECASE ERROR]', err);
       throw new InternalServerErrorException(
         'Terjadi kesalahan saat memperbarui proyek',

@@ -138,6 +138,7 @@ export class CreateProjectUseCase {
         })),
         created_at: complete.created_at.toISOString(),
         updated_at: complete.updated_at.toISOString(),
+        is_top_project: complete.is_top_project,
       };
     } catch (error) {
       console.error('[USECASE ERROR]', error);

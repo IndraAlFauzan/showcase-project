@@ -38,6 +38,9 @@ export class ProjectEntity {
   @Column()
   semester: string;
 
+  @Column({ type: 'boolean', default: false })
+  is_top_project: boolean;
+
   @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'created_by' })
   createdBy: UserEntity;

@@ -44,6 +44,7 @@ import { TechnologyEntity } from './modules/technology/domain/entities/technolog
       useFactory: (config: ConfigService) => ({
         type: 'mysql',
         host: config.get('DATABASE_HOST'),
+
         port: +config.get('DATABASE_PORT'),
         username: config.get('DATABASE_USER'),
         database: config.get('DATABASE_NAME'),

@@ -19,6 +19,7 @@ import { StudentModule } from '../student/student.module';
 import { GetAllProjectsUseCase } from './application/use-cases/get-all-project.usecase';
 import { ProjectPublicController } from './presentation/controllers/project-public.controller';
 import { UpdateProjectUseCase } from './application/use-cases/update-project.usecase';
+import { SetTopProjectUseCase } from './application/use-cases/set-top-project.usecase';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { UpdateProjectUseCase } from './application/use-cases/update-project.use
     GetMyProjectsUseCase,
     GetAllProjectsUseCase, // Assuming you have this use case
     UpdateProjectUseCase,
+    SetTopProjectUseCase,
   ],
 })
 export class ProjectModule {}
